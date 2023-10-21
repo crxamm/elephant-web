@@ -66,25 +66,22 @@ with left:
     with st.expander('**Manual Control**'):
         st.subheader('	:globe_with_meridians: Box Door')
         box_door_on = st.toggle('CLOSE') 
-        if box_door_on : st.write('OPEN')
-        st.subheader('	:globe_with_meridians: Shaking Box')
-        box_shaking_on = st.toggle('Off') 
         if box_shaking_on : st.write('on')
 
         client.collection('node_config').update(selected, {
             'box_door': box_door_on,
             'box_shaking': box_shaking_on
         })
-    with st.expander('**Status Check**'):
-        st.title('	:globe_with_meridians: Status Check')
-        power = selected_node['power']
-        lora = selected_node['lora_condition']
-        camera = selected_node['camera_condition']
-        current_detected = selected_node['currently_detected']
-        status_display("Power", power)
-        status_display("LoRA Condition", lora)
-        status_display("Camera Condition", camera)
-        status_display(f"Elephant {'' if current_detected else 'not'} Detected", not current_detected)
+    
+    st.title('	:globe_with_meridians: Status Check')
+    power = selected_node['power']
+    lora = selected_node['lora_condition']
+    camera = selected_node['camera_condition']
+    current_detected = selected_node['currently_detected']
+    status_display("Power", power)
+    status_display("LoRA Condition", lora)
+    status_display("Camera Condition", camera)
+    status_display(f"Elephant {'' if current_detected else 'not'} Detected", not current_detected)
 
 
 # tf
