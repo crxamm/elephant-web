@@ -66,6 +66,9 @@ with left:
     with st.expander('**Manual Control**'):
         st.subheader('	:globe_with_meridians: Box Door')
         box_door_on = st.toggle('CLOSE') 
+        if box_door_on : st.write('on')
+        
+        box_shaking_on = st.toggle('CLOSE') 
         if box_shaking_on : st.write('on')
 
         client.collection('node_config').update(selected, {
