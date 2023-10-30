@@ -7,9 +7,9 @@ import os
 
 from sseclient import SSEClient
 
-client = PocketBase(os.environ['PB_HOST'])
+client = PocketBase('https://elephant-detection.pockethost.io')
 data = client.collection('users').auth_with_password(
-    "web", os.environ["PB_PWD"]
+    "web", "mgskWGePQM54kYG"
 )
 
 node_config = client.collection('node_config').get_full_list()
@@ -47,8 +47,6 @@ def fetch_detections():
     st.table(data)
 
 
-
-
 def status_display(name, status):
     if(status):
         st.success(name, icon="✅")
@@ -63,30 +61,32 @@ selected_node = nodes.loc[nodes['id'] == selected].iloc[0] # make the option loo
 left, right = st.columns(2)
 with left:
     
-    with st.expander('**Manual Control**'):
-        st.subheader('	:globe_with_meridians: Box Door')
-        box_door_on = st.toggle('CLOSE') 
-        if box_door_on : st.write('on')
-        
-        box_shaking_on = st.toggle('CLOSE') 
-        if box_shaking_on : st.write('on')
+    st.title('	:loudspeaker: Status Check')
+    current_detected = selected_node['currently_detected']
+    status_display(f"Elephant {'' if current_detected else 'not'} Detected", not current_detected)
+    power = selected_node['power']
+    lora = selected_node['lora_condition']
+    camera = selected_node['camera_condition']
+    status_display("Power", power)
+    status_display("LoRA Condition", lora)
+    status_display("Camera Condition", camera)
+    wifi = nodes.loc[nodes['id'] == 'master12xojekmv'].iloc[0]['wifi']
+    status_display("Wifi", wifi)
+
+
+# tf
+with right:
+        st.title(':wrench: Manual Control')
+        st.subheader(' Box Door')
+        box_door_on = st.toggle('door close') 
+        if box_door_on : st.write('door open')
+
+        st.subheader('Vibrate Box')
+        box_shaking_on = st.toggle('not shaking') 
+        if box_shaking_on : st.write('shaking')
 
         client.collection('node_config').update(selected, {
             'box_door': box_door_on,
             'box_shaking': box_shaking_on
         })
-    
-    st.title('	:globe_with_meridians: Status Check')
-    power = selected_node['power']
-    lora = selected_node['lora_condition']
-    camera = selected_node['camera_condition']
-    current_detected = selected_node['currently_detected']
-    status_display("Power", power)
-    status_display("LoRA Condition", lora)
-    status_display("Camera Condition", camera)
-    status_display(f"Elephant {'' if current_detected else 'not'} Detected", not current_detected)
-
-
-# tf
-with right:
-    fetch_detections()
+        fetch_detections()
