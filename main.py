@@ -18,7 +18,6 @@ nodes_id = [node['id'] for node in nodes_lst]
 nodes = pd.DataFrame.from_dict(nodes_lst)
 
 selected_node = nodes_lst[0]
-
 result = client.collection('detections').get_full_list()
 st.set_page_config(page_title='Prevention System', page_icon='elephant:',layout='wide')
 st.title(':elephant: Wild Elephants Prevention System Information')
@@ -59,6 +58,7 @@ selected = st.selectbox("**Choose node**", nodes_id,
 selected_node = nodes.loc[nodes['id'] == selected].iloc[0] # make the option looks friendlier
 
 left, right = st.columns(2)
+
 with left:
     
     st.title('	:loudspeaker: Status Check')
